@@ -1,0 +1,42 @@
+{
+    "name": "mobilenowgroup/laravel-notification",
+    "description": "This package is used to send notifications",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "MobileNowGroup\\LaravelNotification\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "alisaxu",
+            "email": "alisa.xu@mobilenowgroup.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "overtrue/laravel-wechat": "^6.0",
+        "php":"^8.0",
+        "monolog/monolog": "*"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MobileNowGroup\\LaravelNotification\\NotificationServiceProvider"
+            ],
+            "aliases": {
+                "AppChatSend": "MobileNowGroup\\LaravelNotification\\Facades\\AppChatSend",
+                "Dingding": "MobileNowGroup\\LaravelNotification\\Facades\\Dingding"
+            }
+        }
+    },
+    "require-dev": {
+        "laravel/pint": "^1.5"
+    },
+    "config": {
+        "allow-plugins": {
+            "easywechat-composer/easywechat-composer": true
+        }
+    }
+}
