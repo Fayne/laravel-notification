@@ -76,9 +76,7 @@ DINGDING_SSL_VERIFY=true
 DINGDING_LOGGING_CHANNEL=dingding
 DINGDING_LOGGING_LEVEL=level
 LOG_DINGDING_WEBHOOK_URL=
-DINGDING_CHANNEL_KEYWORD=此处的值需要和钉钉群机器人配置的一样
 DINGDING_ERROR_MOBILES=错误提示人
-DINGDING_ALARM_MOBILES=告警提示人
 ```
 
 在 __app/Exceptions/Handler.php__ 文件中修改继承的 __context__ 方法
@@ -131,7 +129,7 @@ protected $middleware = [
 #### 直接发送钉钉消息
 
 ```shell
-app('dingding')->sendText('测试钉钉机器人！');
+app('dingding')->send('测试钉钉机器人！');
 ```
 
 

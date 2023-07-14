@@ -42,7 +42,6 @@ class NotificationServiceProvider extends ServiceProvider
         $this->app->make('config')->set('logging.channels.'.$loggingChannel, [
             'driver' => 'custom',
             'via' => DingdingLogging::class,
-            'keyword' => config('dingding.default_keyword'),
             'level' => config('dingding.logging.level'),
         ]);
     }

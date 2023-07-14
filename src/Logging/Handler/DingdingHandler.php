@@ -8,20 +8,12 @@ use Monolog\Logger;
 class DingdingHandler extends AbstractProcessingHandler
 {
     /**
-     * @var string
-     */
-    protected $keyword = '';
-
-    /**
      * DingdingHandler constructor.
      *
-     * @param  string  $keyword
      * @param  int  $level
      */
-    public function __construct($keyword = '', $level = Logger::ERROR, bool $bubble = true)
+    public function __construct($level = Logger::ERROR, bool $bubble = true)
     {
-        $this->keyword = $keyword;
-
         parent::__construct($level, $bubble);
     }
 

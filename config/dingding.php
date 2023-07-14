@@ -18,20 +18,5 @@ return [
         'webhook' => env('LOG_DINGDING_WEBHOOK_URL', ''),
     ],
 
-    // 默认keyword
-    'default_keyword' => env('DINGDING_CHANNEL_KEYWORD', 'error'),  // 此处必须要填在钉钉机器人中配置的keyword，并且在dingding.php的keywords数组中配置
-
-    //机器人支持的关键词
-    'keywords' => [
-        'error' => [//定义关键词
-            'value' => env('DINGDING_ERROR_KEYWORD', 'error'),
-            'at_mobiles' => array_filter(explode(',', env('DINGDING_ERROR_MOBILES')) ?: []), //定义对应关键词艾特的人
-        ],
-        'alarm' => [
-            'value' => env('DINGDING_ALARM_KEYWORD', 'alarm'),
-            'at_mobiles' => array_filter(explode(',', env('DINGDING_ALARM_MOBILES')) ?: []), //定义对应关键词艾特的人
-        ],
-
-        // 在钉钉机器人中定义的关键词，需要配置在这里。array key和value 即是关键词并必须一致。
-    ],
+    'at_mobiles' => array_filter(explode(',', env('DINGDING_ERROR_MOBILES')) ?: []), //定义艾特的人
 ];

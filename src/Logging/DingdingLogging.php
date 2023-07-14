@@ -13,7 +13,7 @@ class DingdingLogging
     public function __invoke(array $config)
     {
         $logger = new Logger('dingding');
-        $handler = new DingdingHandler($config['keyword'], $config['level']);
+        $handler = new DingdingHandler($config['level']);
         $logger->pushHandler($handler);
 
         return $logger;
