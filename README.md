@@ -64,6 +64,7 @@ app('app-chat-send')->send('测试企业微信机器人！');
 
 1. 创建钉钉群
 2. 设置->智能助手->增加钉钉机器人【一定要记录下来Webhook配置到.env `LOG_DINGDING_WEBHOOK_URL` 或config/dingding.php中】
+3. 选中加签方式进行发送机器人【一定要记录下来secret到配置.env`DINGDING_SECRET`或config/dingding.php中】
 
 ### 配置(.env)
 把下面配置复制到.env文件中
@@ -76,6 +77,7 @@ DINGDING_SSL_VERIFY=true
 DINGDING_LOGGING_CHANNEL=dingding
 DINGDING_LOGGING_LEVEL=level
 LOG_DINGDING_WEBHOOK_URL=
+DINGDING_SECRET=
 DINGDING_ERROR_MOBILES=错误提示人
 ```
 

@@ -16,6 +16,7 @@ return [
         'channel' => env('DINGDING_LOGGING_CHANNEL', 'dingding'),
         'level' => env('DINGDING_LOGGING_LEVEL', 'error'),
         'webhook' => env('LOG_DINGDING_WEBHOOK_URL', ''),
+        'secret' => env('DINGDING_SECRET', ''),
     ],
 
     'at_mobiles' => array_filter(explode(',', env('DINGDING_ERROR_MOBILES')) ?: []), //定义艾特的人
