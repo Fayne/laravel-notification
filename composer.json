@@ -17,7 +17,7 @@
     "minimum-stability": "dev",
     "require": {
         "laravel/framework": "^8.0",
-        "overtrue/laravel-wechat": "^7.0"
+        "overtrue/laravel-wechat": "^6.0"
     },
     "extra": {
         "laravel": {
