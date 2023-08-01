@@ -20,8 +20,9 @@ class DingdingHandler extends AbstractProcessingHandler
     /**
      * @throws \Exception
      */
-    protected function write(array $record): void
+    protected function write($record): void
     {
+        $record = is_object($record) ? $record->toArray() : $record;
         app('dingding')->send($record['message']);
     }
 }
