@@ -4,7 +4,7 @@ namespace MobileNowGroup\LaravelNotification\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
 use MobileNowGroup\LaravelNotification\Jobs\SendWechatRobot;
-use Overtrue\LaravelWeChat\Facade as EasyWeChat;
+use EasyWeChat\Work\Application;
 
 class AppChatSendService
 {
@@ -34,7 +34,13 @@ class AppChatSendService
      */
     public function push(array $params = []): void
     {
-        EasyWeChat::work()->group_robot->send($params['robot_key'], $params['message']);
+        try {
+            $wechatConfig = config('wechat.work.default');
+            $app = new Application($wechatConfig);
+            $app->getClient()->postJson('/cgi-bin/webhook/send?key=' . $wechatConfig['aes_key'], $params['message'])->toArray();
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage());
+        }
     }
 
     public function checkIsDelay(): bool

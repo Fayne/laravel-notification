@@ -20,8 +20,9 @@ class WechatRobotHandler extends AbstractProcessingHandler
     /**
      * @throws \Exception
      */
-    protected function write(array $record): void
+    protected function write($record): void
     {
+        $record = is_object($record) ? $record->toArray() : $record;
         app('app-chat-send')->send($record['message']);
     }
 }
