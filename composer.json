@@ -16,9 +16,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "overtrue/laravel-wechat": "^6.0",
-        "php":"^8.0",
-        "monolog/monolog": "*"
+        "laravel/framework": "^8.0",
+        "overtrue/laravel-wechat": "^7.0"
     },
     "extra": {
         "laravel": {
@@ -30,9 +29,6 @@
                 "Dingding": "MobileNowGroup\\LaravelNotification\\Facades\\Dingding"
             }
         }
-    },
-    "require-dev": {
-        "laravel/pint": "^1.5"
     },
     "config": {
         "allow-plugins": {
