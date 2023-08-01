@@ -2,12 +2,16 @@
 
 # Laravel Notification
 
+### 环境要求
+
+
+
 ### 安装
 
 ```shell
 composer config repositories.mobilenowgroup/laravel-notification git git@github.com:MobileNowGroup/laravel-notification.git
 
-composer require mobilenowgroup/laravel-notification
+composer require mobilenowgroup/laravel-notification:10.*
 
 php artisan vendor:publish --provider="MobileNowGroup\LaravelNotification\NotificationServiceProvider"
 ```

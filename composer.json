@@ -17,9 +17,7 @@
     "minimum-stability": "dev",
     "require": {
         "laravel/framework": "^10.0",
-        "php": ">=8.1",
-        "w7corp/easywechat": "^6.7",
-        "monolog/monolog": "*"
+        "w7corp/easywechat": "^6.7"
     },
     "extra": {
         "laravel": {
