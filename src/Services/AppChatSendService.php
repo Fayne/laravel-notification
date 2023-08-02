@@ -39,7 +39,7 @@ class AppChatSendService
 
     public function checkIsDelay(): bool
     {
-        $count = cache()->tags('wechat_robot')->get('wechat_robot_count');
+        $count = cache()->get('wechat_robot_count');
         if ($count > config('wechat.work.robot_alarm.count')) {
             return true;
         }
@@ -53,7 +53,7 @@ class AppChatSendService
             return false;
         }
 
-        if (cache()->tags('wechat_robot')->get(md5($params['message']['text']['content']))) {
+        if (cache()->get('wechat_robot' . md5($params['message']['text']['content']))) {
             return false;
         }
 
@@ -62,14 +62,14 @@ class AppChatSendService
 
     public function setCache($params)
     {
-        $count = (cache()->tags('wechat_robot')->get('wechat_robot_count') ?? 0) + 1;
-        cache()->tags('wechat_robot')->put(
+        $count = (cache()->get('wechat_robot_count') ?? 0) + 1;
+        cache()->put(
             'wechat_robot_count',
             $count,
             now()->addMinutes(1)
         );
-        cache()->tags('wechat_robot')->put(
-            md5($params['message']['text']['content']),
+        cache()->put(
+            'wechat_robot' . md5($params['message']['text']['content']),
             $params['robot_key'],
             now()->addMinutes(1)
         );

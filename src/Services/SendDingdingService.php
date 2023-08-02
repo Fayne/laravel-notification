@@ -67,7 +67,7 @@ class SendDingdingService
             return false;
         }
 
-        if (cache()->tags('dingding')->get(md5($params['text']['content']))) {
+        if (cache()->get('dingding' . md5($params['text']['content']))) {
             return false;
         }
 
@@ -76,8 +76,8 @@ class SendDingdingService
 
     public function setCache($params)
     {
-        cache()->tags('dingding')->put(
-            md5($params['text']['content']),
+        cache()->put(
+            'dingding' . md5($params['text']['content']),
             $params['at'],
             now()->addMinutes(1)
         );
