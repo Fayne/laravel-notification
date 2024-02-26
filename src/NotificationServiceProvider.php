@@ -17,19 +17,15 @@ class NotificationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (config('wechat.work.robot_alarm.enabled')) {
-            $this->bootWechat();
-        }
+        $this->bootWechat();
 
-        if (config('dingding.enabled')) {
-            $this->bootDingDing();
-        }
+        $this->bootDingDing();
     }
 
     private function bootWechat()
     {
         $loggingChannel = config('wechat.work.robot_alarm.logging.channel', 'wechat_robot');
-        $this->app->make('config')->set('logging.channels.'.$loggingChannel, [
+        $this->app->make('config')->set('logging.channels.' . $loggingChannel, [
             'driver' => 'custom',
             'via' => WechatRobotLogging::class,
             'level' => config('wechat.work.robot_alarm.logging.level'),
@@ -39,7 +35,7 @@ class NotificationServiceProvider extends ServiceProvider
     private function bootDingDing()
     {
         $loggingChannel = config('dingding.logging.channel', 'dingding');
-        $this->app->make('config')->set('logging.channels.'.$loggingChannel, [
+        $this->app->make('config')->set('logging.channels.' . $loggingChannel, [
             'driver' => 'custom',
             'via' => DingdingLogging::class,
             'level' => config('dingding.logging.level'),
@@ -75,14 +71,14 @@ class NotificationServiceProvider extends ServiceProvider
 
     private function setupConfig(): void
     {
-        if (! $this->app->configurationIsCached()) {
-            $this->mergeConfigFrom(dirname(__DIR__).'/config/wechat.php', 'wechat');
-            $this->mergeConfigFrom(dirname(__DIR__).'/config/dingding.php', 'dingding');
+        if (!$this->app->configurationIsCached()) {
+            $this->mergeConfigFrom(dirname(__DIR__) . '/config/wechat.php', 'wechat');
+            $this->mergeConfigFrom(dirname(__DIR__) . '/config/dingding.php', 'dingding');
         }
 
         $this->publishes([
-            dirname(__DIR__).'/config/wechat.php' => config_path('wechat.php'),
-            dirname(__DIR__).'/config/dingding.php' => config_path('dingding.php'),
+            dirname(__DIR__) . '/config/wechat.php' => config_path('wechat.php'),
+            dirname(__DIR__) . '/config/dingding.php' => config_path('dingding.php'),
         ], 'config');
     }
 }
