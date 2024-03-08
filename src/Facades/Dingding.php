@@ -1,6 +1,6 @@
 <?php
 
-namespace MobileNowGroup\Notification\Facades;
+namespace MobileNowGroup\LaravelNotification\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
