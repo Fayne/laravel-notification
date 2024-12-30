@@ -187,4 +187,7 @@ return [
             //  ],
         ],
     ],
+
+    // 发送钉钉消息失败的重试次数'
+    'retry_times' => env('WECHAT_RETRY_TIMES', 3),
 ];

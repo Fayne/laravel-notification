@@ -25,6 +25,11 @@ class SendWechatRobot implements ShouldQueue
         $this->delay(now()->addSecond($delay));
     }
 
+    public function tries(): int
+    {
+        return config('wechat.retry_times', 3);
+    }
+
     /**
      * Execute the job.
      *

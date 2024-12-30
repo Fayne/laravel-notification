@@ -23,6 +23,11 @@ class SendDingding implements ShouldQueue
         $this->params = $params;
     }
 
+    public function tries(): int
+    {
+        return config('dingding.retry_times', 3);
+    }
+
     /**
      * Execute the job.
      *
