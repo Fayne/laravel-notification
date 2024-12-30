@@ -19,5 +19,8 @@ return [
         'secret' => env('DINGDING_SECRET', ''),
     ],
 
+    // 发送钉钉消息失败的重试次数'
+    'retry_times' => env('DINGDING_RETRY_TIMES', 3),
+
     'at_mobiles' => array_filter(env('DINGDING_ERROR_MOBILES') ? (explode(',', env('DINGDING_ERROR_MOBILES')) ?: []) : []), //定义艾特的人
 ];
