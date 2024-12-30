@@ -27,7 +27,7 @@ class SendWechatRobot implements ShouldQueue
 
     public function tries(): int
     {
-        return config('wechat.retry_times');
+        return config('wechat.retry_times', 3);
     }
 
     /**

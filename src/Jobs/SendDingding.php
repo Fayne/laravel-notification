@@ -25,7 +25,7 @@ class SendDingding implements ShouldQueue
 
     public function tries(): int
     {
-        return config('dingding.retry_times');
+        return config('dingding.retry_times', 3);
     }
 
     /**
