@@ -16,7 +16,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "laravel/framework": "^11.0",
+        "laravel/framework": ">10.0",
         "overtrue/laravel-wechat": "^7.2"
     },
     "extra": {

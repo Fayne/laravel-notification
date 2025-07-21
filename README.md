@@ -11,7 +11,7 @@
 ```shell
 composer config repositories.mobilenowgroup/laravel-notification git git@github.com:MobileNowGroup/laravel-notification.git
 
-composer require mobilenowgroup/laravel-notification:^11.0
+composer require mobilenowgroup/laravel-notification
 
 php artisan vendor:publish --provider="MobileNowGroup\LaravelNotification\NotificationServiceProvider"
 ```
