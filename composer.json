@@ -17,7 +17,7 @@
     "minimum-stability": "stable",
     "require": {
         "laravel/framework": ">10.0",
-        "overtrue/laravel-wechat": "^7.2"
+        "w7corp/easywechat": "^6.16"
     },
     "extra": {
         "laravel": {
