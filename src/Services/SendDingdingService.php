@@ -100,9 +100,9 @@ class SendDingdingService
     {
         $ding_webhook = config('dingding.logging.webhook');
         $timestamp = time() * 1000;
-        $sdata = $timestamp . "\n" . config('dingding.logging.secret');
-        $signStr = base64_encode(hash_hmac('sha256', $sdata, config('dingding.logging.secret'),true));
-        $signStr = utf8_encode(urlencode($signStr));
+        $data = $timestamp . "\n" . config('dingding.logging.secret');
+        $signStr = base64_encode(hash_hmac('sha256', $data, config('dingding.logging.secret'),true));
+        $signStr = mb_convert_encoding(urlencode($signStr), 'UTF-8', 'ISO-8859-1');
 
         return "{$ding_webhook}&timestamp={$timestamp}&sign={$signStr}";
     }
