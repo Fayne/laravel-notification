@@ -23,6 +23,8 @@ class DingdingHandler extends AbstractProcessingHandler
     protected function write($record): void
     {
         $record = is_object($record) ? $record->toArray() : $record;
-        app('dingding')->send($record['message']);
+        $context = ($record['context'] ?? []) ? sprintf("\nContext: %s", json_encode($record['context'])) : '';
+
+        app('dingding')->send($record['message'] . $context);
     }
 }
