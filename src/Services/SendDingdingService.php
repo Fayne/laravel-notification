@@ -15,22 +15,17 @@ class SendDingdingService
      * @param  bool  $isAtAll 是否 @ 所有人
      * @param  bool|null  $lockContent 是否需要拼接content
      *
-     * @throws \Exception
      */
-    public function send(string $content, string $keyword = 'error', bool $isAtAll = false, ?bool $lockContent = false)
+    public function send(string $content, string $keyword = 'error', bool $isAtAll = false, bool $lockContent = false): void
     {
-        try {
-            $params = $this->prepareParams($content, $keyword, $isAtAll, $lockContent);
+        $params = $this->prepareParams($content, $keyword, $isAtAll, $lockContent);
 
-            if (! $this->checkIsSend($params)) {
-                return;
-            }
-
-            $this->setCache($params);
-            SendDingding::dispatch($params);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+        if (! $this->checkIsSend($params)) {
+            return;
         }
+
+        $this->setCache($params);
+        SendDingding::dispatch($params);
     }
 
     /**
@@ -38,7 +33,7 @@ class SendDingdingService
      *
      * @throws \Exception
      */
-    private function prepareParams(string $content, string $keyword = 'error', bool $isAtAll = false, ?bool $lockContent = false)
+    private function prepareParams(string $content, string $keyword = 'error', bool $isAtAll = false, bool $lockContent = false): array
     {
         $keywordInfo = config('dingding.keywords')[$keyword] ?? [];
 
@@ -71,9 +66,9 @@ class SendDingdingService
         ];
     }
 
-    private function checkIsSend($params)
+    private function checkIsSend(array $params): bool
     {
-        if (!config('dingding.enabled') || !config('dingding.logging.webhook')) {
+        if (! config('dingding.enabled') || ! config('dingding.logging.webhook')) {
             return false;
         }
 
@@ -84,7 +79,7 @@ class SendDingdingService
         return true;
     }
 
-    public function setCache($params)
+    public function setCache(array $params): void
     {
         cache()->tags('dingding')->put(
             md5($params['text']['content']),
@@ -98,7 +93,7 @@ class SendDingdingService
      *
      * @param  array  $params 请求需要的参数
      */
-    public function push(array $params = [])
+    public function push(array $params = []): ?array
     {
         return Http::post(config('dingding.logging.webhook'), $params)->json();
     }

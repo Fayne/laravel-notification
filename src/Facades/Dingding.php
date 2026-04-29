@@ -1,6 +1,6 @@
 <?php
 
-namespace MobileNowGroup\Notification\Facades;
+namespace MobileNowGroup\LaravelNotification\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -12,10 +12,8 @@ class Dingding extends Facade
 {
     /**
      * Return the facade accessor.
-     *
-     * @return string
      */
-    public static function getFacadeAccessor()
+    public static function getFacadeAccessor(): string
     {
         return 'dingding';
     }

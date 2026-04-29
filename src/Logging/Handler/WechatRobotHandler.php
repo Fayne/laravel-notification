@@ -3,6 +3,7 @@
 namespace MobileNowGroup\LaravelNotification\Logging\Handler;
 
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\LogRecord;
 use Monolog\Logger;
 
 class WechatRobotHandler extends AbstractProcessingHandler
@@ -12,7 +13,7 @@ class WechatRobotHandler extends AbstractProcessingHandler
      *
      * @param  int  $level
      */
-    public function __construct($level = Logger::ERROR, bool $bubble = true)
+    public function __construct(int|string $level = Logger::ERROR, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
     }
@@ -20,8 +21,8 @@ class WechatRobotHandler extends AbstractProcessingHandler
     /**
      * @throws \Exception
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        app('app-chat-send')->send($record['message']);
+        app('app-chat-send')->send($record->message);
     }
 }

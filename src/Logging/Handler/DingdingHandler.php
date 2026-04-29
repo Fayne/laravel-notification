@@ -3,14 +3,12 @@
 namespace MobileNowGroup\LaravelNotification\Logging\Handler;
 
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\LogRecord;
 use Monolog\Logger;
 
 class DingdingHandler extends AbstractProcessingHandler
 {
-    /**
-     * @var string
-     */
-    protected $keyword = '';
+    protected string $keyword = '';
 
     /**
      * DingdingHandler constructor.
@@ -18,7 +16,7 @@ class DingdingHandler extends AbstractProcessingHandler
      * @param  string  $keyword
      * @param  int  $level
      */
-    public function __construct($keyword = '', $level = Logger::ERROR, bool $bubble = true)
+    public function __construct(string $keyword = '', int|string $level = Logger::ERROR, bool $bubble = true)
     {
         $this->keyword = $keyword;
 
@@ -28,8 +26,8 @@ class DingdingHandler extends AbstractProcessingHandler
     /**
      * @throws \Exception
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        app('dingding')->send($record['message']);
+        app('dingding')->send($record->message, $this->keyword ?: 'error');
     }
 }

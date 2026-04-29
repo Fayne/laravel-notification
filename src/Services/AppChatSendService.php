@@ -8,21 +8,17 @@ use Overtrue\LaravelWeChat\Facade as EasyWeChat;
 
 class AppChatSendService
 {
-    public function send(string $content, array $mentionedMobileList = ['@all'], ?bool $lockContent = false)
+    public function send(string $content, array $mentionedMobileList = ['@all'], bool $lockContent = false): void
     {
-        try {
-            $params = $this->prepareParams($content, $mentionedMobileList, $lockContent);
+        $params = $this->prepareParams($content, $mentionedMobileList, $lockContent);
 
-            if (! $this->checkIsSend($params)) {
-                return;
-            }
-
-            $this->setCache($params);
-            $delay = $this->checkIsDelay() ? config('wechat.work.robot_alarm.queue_delay') : 0;
-            SendWechatRobot::dispatch($params, $delay);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+        if (! $this->checkIsSend($params)) {
+            return;
         }
+
+        $this->setCache($params);
+        $delay = $this->checkIsDelay() ? (int) config('wechat.work.robot_alarm.queue_delay') : 0;
+        SendWechatRobot::dispatch($params, $delay);
     }
 
     /**
@@ -47,7 +43,7 @@ class AppChatSendService
         return false;
     }
 
-    public function checkIsSend($params): bool
+    public function checkIsSend(array $params): bool
     {
         if (! config('wechat.work.robot_alarm.enabled')) {
             return false;
@@ -60,7 +56,7 @@ class AppChatSendService
         return true;
     }
 
-    public function setCache($params)
+    public function setCache(array $params): void
     {
         $count = (cache()->tags('wechat_robot')->get('wechat_robot_count') ?? 0) + 1;
         cache()->tags('wechat_robot')->put(
@@ -79,7 +75,7 @@ class AppChatSendService
      * @param  array|string[]  $mentionedMobileList
      * @return array
      */
-    public function prepareParams(string $content, array $mentionedMobileList = ['@all'], ?bool $lockContent = false)
+    public function prepareParams(string $content, array $mentionedMobileList = ['@all'], bool $lockContent = false): array
     {
         $content = $lockContent ? $content : sprintf('[%s][%s]%s',
             config('app.name'),

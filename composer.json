@@ -2,23 +2,30 @@
     "name": "mobilenowgroup/laravel-notification",
     "description": "This package is used to send notifications",
     "type": "library",
-    "license": "MIT",
+    "license": "proprietary",
     "autoload": {
         "psr-4": {
             "MobileNowGroup\\LaravelNotification\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "MobileNowGroup\\LaravelNotification\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
-            "name": "alisaxu",
-            "email": "alisa.xu@mobilenowgroup.com"
+            "name": "Fayne Guo",
+            "email": "fayne@mobilenowgroup.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "require": {
-        "overtrue/laravel-wechat": "^6.0",
-        "php":"^8.0",
-        "monolog/monolog": "*"
+        "php": "^8.3",
+        "laravel/framework": "^13.0",
+        "monolog/monolog": "^3.0",
+        "overtrue/laravel-wechat": "^8.0"
     },
     "extra": {
         "laravel": {
@@ -32,7 +39,13 @@
         }
     },
     "require-dev": {
-        "laravel/pint": "^1.5"
+        "laravel/pint": "^1.5",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^11.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "scripts": {
+        "test": "phpunit"
     },
     "config": {
         "allow-plugins": {

@@ -13,25 +13,15 @@ class SendDingding implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * @var array
-     */
-    protected $params;
+    protected array $params;
 
     public function __construct(array $params)
     {
         $this->params = $params;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     *
-     * @throws \Exception
-     */
-    public function handle()
+    public function handle(SendDingdingService $service): void
     {
-        (new SendDingdingService())->push($this->params);
+        $service->push($this->params);
     }
 }

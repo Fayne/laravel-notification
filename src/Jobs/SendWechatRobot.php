@@ -13,10 +13,7 @@ class SendWechatRobot implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * @var array
-     */
-    protected $params;
+    protected array $params;
 
     public function __construct(array $params, int $delay = 0)
     {
@@ -25,15 +22,8 @@ class SendWechatRobot implements ShouldQueue
         $this->delay(now()->addSecond($delay));
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     *
-     * @throws \Exception|\GuzzleHttp\Exception\GuzzleException
-     */
-    public function handle()
+    public function handle(AppChatSendService $service): void
     {
-        (new AppChatSendService())->push($this->params);
+        $service->push($this->params);
     }
 }
