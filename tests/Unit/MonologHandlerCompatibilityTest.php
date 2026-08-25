@@ -1,10 +1,10 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Tests\Unit;
+namespace Fayne\LaravelNotification\Tests\Unit;
 
-use MobileNowGroup\LaravelNotification\Logging\Handler\DingdingHandler;
-use MobileNowGroup\LaravelNotification\Logging\Handler\WechatRobotHandler;
-use MobileNowGroup\LaravelNotification\Tests\TestCase;
+use Fayne\LaravelNotification\Logging\Handler\DingdingHandler;
+use Fayne\LaravelNotification\Logging\Handler\WechatRobotHandler;
+use Fayne\LaravelNotification\Tests\TestCase;
 use Mockery;
 use Monolog\Level;
 use Monolog\Logger;

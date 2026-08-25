@@ -1,13 +1,13 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Jobs;
+namespace Fayne\LaravelNotification\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use MobileNowGroup\LaravelNotification\Services\AppChatSendService;
+use Fayne\LaravelNotification\Services\AppChatSendService;
 
 class SendWechatRobot implements ShouldQueue
 {

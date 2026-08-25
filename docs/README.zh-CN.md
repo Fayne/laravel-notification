@@ -14,8 +14,8 @@
 ## 安装
 
 ```bash
-composer require mobilenowgroup/laravel-notification
-php artisan vendor:publish --provider="MobileNowGroup\LaravelNotification\NotificationServiceProvider"
+composer require fayne/laravel-notification
+php artisan vendor:publish --provider="Fayne\LaravelNotification\NotificationServiceProvider"
 ```
 
 如果你使用 `stack` 日志通道，请在 `config/logging.php` 中加入：
@@ -90,7 +90,7 @@ protected function context(): array
 并在全局中间件中加入 request ID 中间件：
 
 ```php
-\MobileNowGroup\LaravelNotification\Http\Middleware\RequestId::class,
+\Fayne\LaravelNotification\Http\Middleware\RequestId::class,
 ```
 
 ### 直接发送

@@ -1,6 +1,6 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Events;
+namespace Fayne\LaravelNotification\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;

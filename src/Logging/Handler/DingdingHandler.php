@@ -1,6 +1,6 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Logging\Handler;
+namespace Fayne\LaravelNotification\Logging\Handler;
 
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\LogRecord;

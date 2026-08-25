@@ -1,8 +1,8 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Tests;
+namespace Fayne\LaravelNotification\Tests;
 
-use MobileNowGroup\LaravelNotification\NotificationServiceProvider;
+use Fayne\LaravelNotification\NotificationServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra

@@ -1,9 +1,9 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Services;
+namespace Fayne\LaravelNotification\Services;
 
 use GuzzleHttp\Exception\GuzzleException;
-use MobileNowGroup\LaravelNotification\Jobs\SendWechatRobot;
+use Fayne\LaravelNotification\Jobs\SendWechatRobot;
 use Overtrue\LaravelWeChat\Facade as EasyWeChat;
 
 class AppChatSendService

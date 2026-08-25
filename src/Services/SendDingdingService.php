@@ -1,9 +1,9 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Services;
+namespace Fayne\LaravelNotification\Services;
 
 use Illuminate\Support\Facades\Http;
-use MobileNowGroup\LaravelNotification\Jobs\SendDingding;
+use Fayne\LaravelNotification\Jobs\SendDingding;
 
 class SendDingdingService
 {

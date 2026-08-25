@@ -1,12 +1,12 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Tests\Unit;
+namespace Fayne\LaravelNotification\Tests\Unit;
 
-use MobileNowGroup\LaravelNotification\Jobs\SendDingding;
-use MobileNowGroup\LaravelNotification\Jobs\SendWechatRobot;
-use MobileNowGroup\LaravelNotification\Services\AppChatSendService;
-use MobileNowGroup\LaravelNotification\Services\SendDingdingService;
-use MobileNowGroup\LaravelNotification\Tests\TestCase;
+use Fayne\LaravelNotification\Jobs\SendDingding;
+use Fayne\LaravelNotification\Jobs\SendWechatRobot;
+use Fayne\LaravelNotification\Services\AppChatSendService;
+use Fayne\LaravelNotification\Services\SendDingdingService;
+use Fayne\LaravelNotification\Tests\TestCase;
 use Mockery;
 
 class JobDependencyInjectionTest extends TestCase

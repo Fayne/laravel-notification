@@ -1,8 +1,8 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Logging;
+namespace Fayne\LaravelNotification\Logging;
 
-use MobileNowGroup\LaravelNotification\Logging\Handler\WechatRobotHandler;
+use Fayne\LaravelNotification\Logging\Handler\WechatRobotHandler;
 use Monolog\Logger;
 
 class WechatRobotLogging

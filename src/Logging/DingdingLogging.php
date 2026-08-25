@@ -1,8 +1,8 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Logging;
+namespace Fayne\LaravelNotification\Logging;
 
-use MobileNowGroup\LaravelNotification\Logging\Handler\DingdingHandler;
+use Fayne\LaravelNotification\Logging\Handler\DingdingHandler;
 use Monolog\Logger;
 
 class DingdingLogging

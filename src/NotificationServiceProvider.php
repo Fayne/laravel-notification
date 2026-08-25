@@ -1,12 +1,12 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification;
+namespace Fayne\LaravelNotification;
 
 use Illuminate\Support\ServiceProvider;
-use MobileNowGroup\LaravelNotification\Logging\DingdingLogging;
-use MobileNowGroup\LaravelNotification\Logging\WechatRobotLogging;
-use MobileNowGroup\LaravelNotification\Services\AppChatSendService;
-use MobileNowGroup\LaravelNotification\Services\SendDingdingService;
+use Fayne\LaravelNotification\Logging\DingdingLogging;
+use Fayne\LaravelNotification\Logging\WechatRobotLogging;
+use Fayne\LaravelNotification\Services\AppChatSendService;
+use Fayne\LaravelNotification\Services\SendDingdingService;
 
 class NotificationServiceProvider extends ServiceProvider
 {

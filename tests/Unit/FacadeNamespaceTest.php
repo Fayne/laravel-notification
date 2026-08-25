@@ -1,9 +1,9 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Tests\Unit;
+namespace Fayne\LaravelNotification\Tests\Unit;
 
-use MobileNowGroup\LaravelNotification\Facades\Dingding;
-use MobileNowGroup\LaravelNotification\Tests\TestCase;
+use Fayne\LaravelNotification\Facades\Dingding;
+use Fayne\LaravelNotification\Tests\TestCase;
 
 class FacadeNamespaceTest extends TestCase
 {

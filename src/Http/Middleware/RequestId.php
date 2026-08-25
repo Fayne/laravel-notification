@@ -1,6 +1,6 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Http\Middleware;
+namespace Fayne\LaravelNotification\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

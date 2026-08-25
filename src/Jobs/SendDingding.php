@@ -1,13 +1,13 @@
 <?php
 
-namespace MobileNowGroup\LaravelNotification\Jobs;
+namespace Fayne\LaravelNotification\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use MobileNowGroup\LaravelNotification\Services\SendDingdingService;
+use Fayne\LaravelNotification\Services\SendDingdingService;
 
 class SendDingding implements ShouldQueue
 {

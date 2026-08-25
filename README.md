@@ -1,4 +1,4 @@
-<p align="center"><img src="http://res.cloudinary.com/guorenjun/image/upload/v1531809978/MN_LOGO_3.png" width="300"></p>
+<p align="center"><img src="https://res.cloudinary.com/fayne/image/upload/v1787643269/fayne_logo.png" width="300"></p>
 
 # Laravel Notification
 
@@ -16,8 +16,8 @@ This major version targets Laravel 13 only.
 ## Installation
 
 ```bash
-composer require mobilenowgroup/laravel-notification
-php artisan vendor:publish --provider="MobileNowGroup\LaravelNotification\NotificationServiceProvider"
+composer require fayne/laravel-notification
+php artisan vendor:publish --provider="Fayne\LaravelNotification\NotificationServiceProvider"
 ```
 
 Add channels to `config/logging.php` if you are using `stack`:
@@ -92,7 +92,7 @@ protected function context(): array
 And add request ID middleware to your global middleware stack:
 
 ```php
-\MobileNowGroup\LaravelNotification\Http\Middleware\RequestId::class,
+\Fayne\LaravelNotification\Http\Middleware\RequestId::class,
 ```
 
 ### Direct Send
