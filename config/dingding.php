@@ -6,7 +6,7 @@ return [
 
     // 钉钉日志只记录request id
     'only_request_id' => env('DINGDING_ONLY_REQUEST_ID', true),
-    'request_id_key' => env('DINGDING_ONLY_REQUEST_KEY', 'mn-request-id'),
+    'request_id_key' => env('DINGDING_ONLY_REQUEST_KEY', 'fayne-request-id'),
 
     // curl证书验证, 线下环境不用开启
     'curl_verify' => env('DINGDING_SSL_VERIFY', true),

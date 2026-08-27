@@ -58,7 +58,7 @@ app('app-chat-send')->send('测试企业微信机器人消息');
 ```dotenv
 DINGDING_ENABLED=true
 DINGDING_ONLY_REQUEST_ID=true
-DINGDING_ONLY_REQUEST_KEY=mn-request-id
+DINGDING_ONLY_REQUEST_KEY=fayne-request-id
 DINGDING_SSL_VERIFY=true
 DINGDING_LOGGING_CHANNEL=dingding
 DINGDING_LOGGING_LEVEL=error
