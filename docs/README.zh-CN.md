@@ -225,6 +225,63 @@ class QueuedAppSystemNotification extends AppSystemNotification implements Shoul
 
 运行 `composer test` 执行自动化测试。当前实现已在 PHP 8.3 / 8.4、Laravel 13.7.0 / 13.38.0 下验证，包括使用模拟 HTTP 响应的真实 SQLite 数据库队列执行流程；这不能替代真实平台投递、Redis 或生产环境验收。
 
+## 可选：Spatie Backup 集成
+
+使用 `spatie/laravel-backup:^10.0` 的项目，可以直接复用本包提供的六类备份通知和 `BackupNotifiable`。Backup 是可选的运行时集成：本包只将其列为开发测试依赖，不会让普通使用者自动安装它。
+
+项目尚未安装 Backup 时执行：
+
+```bash
+composer require spatie/laravel-backup:^10.0
+```
+
+在项目已有的 `config/backup.php` 中，将原通知类**替换**为下面的对应类，保留其他 Backup 配置和已有邮件等设置。同一个事件不要同时保留 Spatie 原类和本包类；Spatie 按短类名匹配，并选择第一个匹配项。
+
+```php
+use Fayne\LaravelNotification\Integrations\SpatieBackup\BackupNotifiable;
+use Fayne\LaravelNotification\Integrations\SpatieBackup\Notifications as RobotBackup;
+
+// 放在 config/backup.php 返回的配置数组中：
+'notifications' => [
+    'notifications' => [
+        RobotBackup\BackupHasFailedNotification::class => ['mail', 'dingding', 'wecom'],
+        RobotBackup\CleanupHasFailedNotification::class => ['mail', 'dingding', 'wecom'],
+        RobotBackup\UnhealthyBackupWasFoundNotification::class => ['mail', 'dingding', 'wecom'],
+        RobotBackup\BackupWasSuccessfulNotification::class => ['wecom'],
+        RobotBackup\CleanupWasSuccessfulNotification::class => [],
+        RobotBackup\HealthyBackupWasFoundNotification::class => [],
+    ],
+
+    'notifiable' => BackupNotifiable::class,
+
+    'dingding' => [
+        'webhook' => env('BACKUP_DINGDING_WEBHOOK', ''),
+        'secret' => env('BACKUP_DINGDING_SECRET', ''),
+    ],
+
+    'wecom' => [
+        'robot_key' => env('BACKUP_WECOM_ROBOT_KEY', ''),
+    ],
+
+    // 此处保留原有 mail、slack、discord、webhook 配置。
+],
+```
+
+环境变量示例：
+
+```dotenv
+BACKUP_DINGDING_WEBHOOK=https://oapi.dingtalk.com/robot/send?access_token=...
+BACKUP_DINGDING_SECRET=
+BACKUP_WECOM_ROBOT_KEY=
+```
+
+- 示例将失败和不健康报告发送到邮件及两个机器人，将备份成功发送到企业微信，关闭清理成功和健康报告。每个项目可调整通道列表；空数组表示该事件不发送通知。使用 `mail` 时还需配置 Spatie 原有邮件接收地址和 Laravel 邮件传输。
+- `BackupNotifiable` 继承 Spatie 原有邮件等路由，并通过 `config()` 显式读取 `backup.notifications.dingding.*` 和 `backup.notifications.wecom.robot_key`。缺少机器人地址时跳过对应通道；地址、签名密钥都不会回退到全局日志告警配置，旧机器人告警开关不控制这些显式通知。企业微信的 `robot_key` 也支持完整 HTTPS Webhook。
+- 六个类分别继承 Spatie 对应通知，保留其 `via()`、邮件及其他消息方法，只增加 `toDingding()` 和 `toWecom()`。不需要额外注册 Provider、监听事件或手动调用 `Notification::route()`。
+- 群消息包括 Spatie 本地化标题（项目和环境）、备份名、磁盘。失败/不健康消息带 `error` 标记，其他消息带 `info` 标记；健康检查失败会列出检查名称。消息不包含原始异常、堆栈或健康检查错误原文，完整诊断请查看应用日志；文本最多 1,900 个 UTF-8 字节。使用关键词校验的钉钉机器人需要接受生成的消息；成功和失败共用机器人时推荐使用加签。
+- 默认同步投递，备份告警无需额外依赖队列。HTTP 或限流失败会向外抛出异常，此集成不会静默成功，也不自行持久化重试。需要异步时，在应用中继承对应集成类，保留**相同短类名**，实现 `ShouldQueue`，并按前文队列示例添加限流中间件、重试截止时间及异常次数限制，再将配置映射改为这些子类。
+- 修改配置后重新构建配置缓存，按需重启常驻 worker，并在预发布环境验证机器人收取。自动化集成测试通过真实的六类 Spatie 事件、其事件处理器和 Laravel 通道验证模拟 HTTP 投递，不会执行真实备份，也不能证明平台实际送达。
+
 ## 贡献指南
 
 1. 创建功能分支

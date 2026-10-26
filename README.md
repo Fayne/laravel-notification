@@ -227,6 +227,63 @@ The legacy `send()` methods remain queued and keep 60-second deduplication per r
 
 Run `composer test` for automated verification. The implementation has been tested with PHP 8.3 / 8.4 and Laravel 13.7.0 / 13.38.0, including an actual SQLite-backed queue worker flow with stubbed HTTP responses. This does not establish real provider delivery, Redis behavior or production readiness for your deployment.
 
+## Optional Spatie Backup Integration
+
+Projects using `spatie/laravel-backup:^10.0` can reuse six notification classes and `BackupNotifiable` included in this package. Backup is an optional runtime integration; it is required only for development tests and is not installed transitively for ordinary consumers.
+
+Install Backup in the application if needed:
+
+```bash
+composer require spatie/laravel-backup:^10.0
+```
+
+In the application's existing `config/backup.php`, **replace** the original notification-class entries with the corresponding classes below. Keep the other Backup configuration and existing mail/slack/etc. settings. Do not retain both the original Spatie class and our class for the same event: Spatie selects the first matching class basename.
+
+```php
+use Fayne\LaravelNotification\Integrations\SpatieBackup\BackupNotifiable;
+use Fayne\LaravelNotification\Integrations\SpatieBackup\Notifications as RobotBackup;
+
+// Inside config/backup.php's returned array:
+'notifications' => [
+    'notifications' => [
+        RobotBackup\BackupHasFailedNotification::class => ['mail', 'dingding', 'wecom'],
+        RobotBackup\CleanupHasFailedNotification::class => ['mail', 'dingding', 'wecom'],
+        RobotBackup\UnhealthyBackupWasFoundNotification::class => ['mail', 'dingding', 'wecom'],
+        RobotBackup\BackupWasSuccessfulNotification::class => ['wecom'],
+        RobotBackup\CleanupWasSuccessfulNotification::class => [],
+        RobotBackup\HealthyBackupWasFoundNotification::class => [],
+    ],
+
+    'notifiable' => BackupNotifiable::class,
+
+    'dingding' => [
+        'webhook' => env('BACKUP_DINGDING_WEBHOOK', ''),
+        'secret' => env('BACKUP_DINGDING_SECRET', ''),
+    ],
+
+    'wecom' => [
+        'robot_key' => env('BACKUP_WECOM_ROBOT_KEY', ''),
+    ],
+
+    // Keep the existing mail, slack, discord and webhook configuration here.
+],
+```
+
+Example environment variables:
+
+```dotenv
+BACKUP_DINGDING_WEBHOOK=https://oapi.dingtalk.com/robot/send?access_token=...
+BACKUP_DINGDING_SECRET=
+BACKUP_WECOM_ROBOT_KEY=
+```
+
+- The example sends failures/unhealthy reports to mail and both robots, successful backups to WeCom, and disables cleanup-success/healthy reports. Change the channel lists per project; an empty list disables that event's notifications. If using `mail`, configure Spatie's existing mail recipient and Laravel mail transport.
+- `BackupNotifiable` inherits Spatie's mail/other routing and explicitly reads `backup.notifications.dingding.*` and `backup.notifications.wecom.robot_key` through `config()`. Missing robot addresses skip that channel. Neither addresses nor signing secrets fall back to global log-alarm robots; robot enable switches do not control these explicit notifications. WeCom also accepts a full HTTPS webhook in `robot_key`.
+- All six classes inherit the matching Spatie notification, retain its `via()`/mail/other message methods, and add `toDingding()`/`toWecom()`. No extra provider, event listener or manual `Notification::route()` call is needed.
+- Robot text includes Spatie's localized subject (application/environment), backup name and disk. Failure/unhealthy text has an `error` marker; other text has an `info` marker. Health failures identify check names. Exception messages, stack traces and raw health-check failure text are omitted; inspect application logs for full diagnostics. Text is limited to 1,900 UTF-8 bytes. A keyword-secured DingTalk robot must accept the generated message; signing is recommended when failures and successes share a robot.
+- Delivery is synchronous by default, avoiding an additional queue dependency for backup alerts. HTTP/limit failures propagate; the integration does not silently claim success or persist retries. If you need async delivery, subclass the relevant integration notification under the **same short class name**, implement `ShouldQueue`, and apply the middleware/deadline/exception-budget pattern in the queued-notification section. Change the mapping to your subclasses.
+- After changing config, rebuild cached configuration and restart long-running workers as applicable. Verify real robot receipt in staging. Automated integration tests exercise all six actual Spatie events through its event handler and Laravel channels with fake HTTP; they do not execute a real backup or prove provider delivery.
+
 ## Contributing
 
 1. Create a feature branch
