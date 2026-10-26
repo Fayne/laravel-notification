@@ -2,9 +2,10 @@
 
 namespace Fayne\LaravelNotification\Logging\Handler;
 
+use Fayne\LaravelNotification\Exceptions\RobotDeliveryException;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\LogRecord;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 class DingdingHandler extends AbstractProcessingHandler
 {
@@ -13,7 +14,6 @@ class DingdingHandler extends AbstractProcessingHandler
     /**
      * DingdingHandler constructor.
      *
-     * @param  string  $keyword
      * @param  int  $level
      */
     public function __construct(string $keyword = '', int|string $level = Logger::ERROR, bool $bubble = true)
@@ -23,11 +23,16 @@ class DingdingHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
-    /**
-     * @throws \Exception
-     */
     protected function write(LogRecord $record): void
     {
-        app('dingding')->send($record->message, $this->keyword ?: 'error');
+        if (($record->context['exception'] ?? null) instanceof RobotDeliveryException) {
+            return;
+        }
+
+        try {
+            app('dingding')->send($record->message, $this->keyword ?: 'error');
+        } catch (\Throwable $exception) {
+            error_log('DingTalk robot log delivery failed ('.get_class($exception).').');
+        }
     }
 }

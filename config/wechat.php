@@ -139,19 +139,21 @@ return [
     /*
      * 企业微信
      */
+    'retry_times' => 3,
+
     'work' => [
         'default' => [
             'corp_id' => env('WECHAT_WORK_AGENT_CONTACTS_CORP_ID', ''),
             'agent_id' => env('WECHAT_WORK_AGENT_CONTACTS_AGENT_ID', ''),
             'secret' => env('WECHAT_WORK_AGENT_CONTACTS_SECRET', ''),
-            //...
+            // ...
         ],
 
         'robot_alarm' => [
             // 是否开启企业微信报错
             'enabled' => env('WECHAT_ROBOT_ENABLE', false),
             'robot_key' => env('WECHAT_WORK_AGENT_CONTACTS_ROBOT_KEY', ''),
-            'mentioned_mobile_list' => array_filter(explode(',', env('WECHAT_WORK_AGENT_ROBOT_MENTIONED_MOBILE_LIST')) ?: ['@all']),
+            'mentioned_mobile_list' => array_filter(explode(',', env('WECHAT_WORK_AGENT_ROBOT_MENTIONED_MOBILE_LIST', '@all')) ?: ['@all']),
 
             // logging
             'logging' => [
@@ -159,6 +161,7 @@ return [
                 'level' => env('WECHAT_ROBOT_LEVEL', 'error'),
             ],
 
+            'http' => ['timeout' => 10, 'connect_timeout' => 3],
             'count' => 20,
             'queue_delay' => 60,
         ],

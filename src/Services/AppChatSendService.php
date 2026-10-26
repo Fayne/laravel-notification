@@ -2,13 +2,12 @@
 
 namespace Fayne\LaravelNotification\Services;
 
-use GuzzleHttp\Exception\GuzzleException;
 use Fayne\LaravelNotification\Jobs\SendWechatRobot;
-use Overtrue\LaravelWeChat\Facade as EasyWeChat;
+use Fayne\LaravelNotification\Support\RobotDelivery;
 
 class AppChatSendService
 {
-    public function send(string $content, array $mentionedMobileList = ['@all'], bool $lockContent = false): void
+    public function send(string $content, ?array $mentionedMobileList = null, bool $lockContent = false): void
     {
         $params = $this->prepareParams($content, $mentionedMobileList, $lockContent);
 
@@ -16,67 +15,41 @@ class AppChatSendService
             return;
         }
 
-        $this->setCache($params);
-        $delay = $this->checkIsDelay() ? (int) config('wechat.work.robot_alarm.queue_delay') : 0;
-        SendWechatRobot::dispatch($params, $delay);
+        SendWechatRobot::dispatch($params);
     }
 
-    /**
-     * 发送
-     *
-     * @param  array  $params 请求需要的参数
-     *
-     * @throws \Exception|GuzzleException
-     */
-    public function push(array $params = []): void
+    public function push(array $params = [], bool $deduplicate = true): ?array
     {
-        EasyWeChat::work()->group_robot->send($params['robot_key'], $params['message']);
+        return (new RobotDelivery)->send('wecom', $this->webhook($params['robot_key']), $params['message'], $deduplicate);
     }
 
     public function checkIsDelay(): bool
     {
-        $count = cache()->tags('wechat_robot')->get('wechat_robot_count');
-        if ($count > config('wechat.work.robot_alarm.count')) {
-            return true;
-        }
-
-        return false;
+        return (new RobotDelivery)->retryAfter($this->webhook(config('wechat.work.robot_alarm.robot_key', ''))) > 0;
     }
 
     public function checkIsSend(array $params): bool
     {
-        if (! config('wechat.work.robot_alarm.enabled')) {
-            return false;
-        }
-
-        if (cache()->tags('wechat_robot')->get(md5($params['message']['text']['content']))) {
-            return false;
-        }
-
-        return true;
+        return config('wechat.work.robot_alarm.enabled') && ! empty($params['robot_key'])
+            && ! (new RobotDelivery)->wasSent('wecom', $this->webhook($params['robot_key']), $params['message']);
     }
 
     public function setCache(array $params): void
     {
-        $count = (cache()->tags('wechat_robot')->get('wechat_robot_count') ?? 0) + 1;
-        cache()->tags('wechat_robot')->put(
-            'wechat_robot_count',
-            $count,
-            now()->addMinutes(1)
-        );
-        cache()->tags('wechat_robot')->put(
-            md5($params['message']['text']['content']),
-            $params['robot_key'],
-            now()->addMinutes(1)
-        );
+        (new RobotDelivery)->remember('wecom', $this->webhook($params['robot_key']), $params['message']);
+    }
+
+    private function webhook(string $route): string
+    {
+        return str_contains($route, '://') ? $route : 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key='.rawurlencode($route);
     }
 
     /**
      * @param  array|string[]  $mentionedMobileList
-     * @return array
      */
-    public function prepareParams(string $content, array $mentionedMobileList = ['@all'], bool $lockContent = false): array
+    public function prepareParams(string $content, ?array $mentionedMobileList = null, bool $lockContent = false): array
     {
+        $mentionedMobileList ??= config('wechat.work.robot_alarm.mentioned_mobile_list', ['@all']);
         $content = $lockContent ? $content : sprintf('[%s][%s]%s',
             config('app.name'),
             config('app.env'),

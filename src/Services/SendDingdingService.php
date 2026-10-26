@@ -2,35 +2,35 @@
 
 namespace Fayne\LaravelNotification\Services;
 
-use Illuminate\Support\Facades\Http;
 use Fayne\LaravelNotification\Jobs\SendDingding;
+use Fayne\LaravelNotification\Support\RobotDelivery;
 
 class SendDingdingService
 {
     /**
      * 发送文本类型的消息
      *
-     * @param $content string 消息内容
-     * @param  string  $keyword 关键词
-     * @param  bool  $isAtAll 是否 @ 所有人
-     * @param  bool|null  $lockContent 是否需要拼接content
-     *
+     * @param  $content  string 消息内容
+     * @param  string  $keyword  关键词
+     * @param  bool  $isAtAll  是否 @ 所有人
+     * @param  bool|null  $lockContent  是否需要拼接content
      */
     public function send(string $content, string $keyword = 'error', bool $isAtAll = false, bool $lockContent = false): void
     {
+        if (! config('dingding.enabled')) {
+            return;
+        }
+
         $params = $this->prepareParams($content, $keyword, $isAtAll, $lockContent);
 
         if (! $this->checkIsSend($params)) {
             return;
         }
 
-        $this->setCache($params);
         SendDingding::dispatch($params);
     }
 
     /**
-     * @return array
-     *
      * @throws \Exception
      */
     private function prepareParams(string $content, string $keyword = 'error', bool $isAtAll = false, bool $lockContent = false): array
@@ -59,8 +59,8 @@ class SendDingdingService
                 'content' => $content,
             ],
             'at' => [
-                'atMobiles' => $keywordInfo['at_mobiles'] ?? [], //被艾特的手机号
-                'isAtAll' => $isAtAll, //是否全员艾特
+                'atMobiles' => $keywordInfo['at_mobiles'] ?? [], // 被艾特的手机号
+                'isAtAll' => $isAtAll, // 是否全员艾特
             ],
             'keyword' => $keyword,
         ];
@@ -72,7 +72,9 @@ class SendDingdingService
             return false;
         }
 
-        if (cache()->tags('dingding')->get(md5($params['text']['content']))) {
+        $message = $params;
+        unset($message['keyword']);
+        if ((new RobotDelivery)->wasSent('dingding', config('dingding.logging.webhook'), $message)) {
             return false;
         }
 
@@ -81,20 +83,22 @@ class SendDingdingService
 
     public function setCache(array $params): void
     {
-        cache()->tags('dingding')->put(
-            md5($params['text']['content']),
-            $params['at'],
-            now()->addMinutes(1)
-        );
+        unset($params['keyword']);
+        (new RobotDelivery)->remember('dingding', config('dingding.logging.webhook'), $params);
     }
 
     /**
      * 发送
      *
-     * @param  array  $params 请求需要的参数
+     * @param  array  $params  请求需要的参数
      */
-    public function push(array $params = []): ?array
+    public function push(array $params = [], string|array|null $route = null, bool $deduplicate = true): ?array
     {
-        return Http::post(config('dingding.logging.webhook'), $params)->json();
+        $route ??= config('dingding.logging.webhook');
+        $webhook = is_array($route) ? ($route['webhook'] ?? '') : $route;
+        $secret = is_array($route) ? ($route['secret'] ?? config('dingding.logging.secret', '')) : config('dingding.logging.secret', '');
+        unset($params['keyword']);
+
+        return (new RobotDelivery)->send('dingding', $webhook, $params, $deduplicate, $secret);
     }
 }

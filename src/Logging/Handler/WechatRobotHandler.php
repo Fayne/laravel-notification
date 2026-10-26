@@ -2,9 +2,10 @@
 
 namespace Fayne\LaravelNotification\Logging\Handler;
 
+use Fayne\LaravelNotification\Exceptions\RobotDeliveryException;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\LogRecord;
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 class WechatRobotHandler extends AbstractProcessingHandler
 {
@@ -18,11 +19,16 @@ class WechatRobotHandler extends AbstractProcessingHandler
         parent::__construct($level, $bubble);
     }
 
-    /**
-     * @throws \Exception
-     */
     protected function write(LogRecord $record): void
     {
-        app('app-chat-send')->send($record->message);
+        if (($record->context['exception'] ?? null) instanceof RobotDeliveryException) {
+            return;
+        }
+
+        try {
+            app('app-chat-send')->send($record->message);
+        } catch (\Throwable $exception) {
+            error_log('WeCom robot log delivery failed ('.get_class($exception).').');
+        }
     }
 }
